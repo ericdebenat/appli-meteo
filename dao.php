@@ -2,10 +2,10 @@
 
 class DAO {
 	
-	private $host = "localhost";
-	private $database = "test";
-	private $user = "user_meteo";
-	private $password = "YkAfa9duuGGjB23s";
+	private $host = "###";
+	private $database = "###";
+	private $user = "###";
+	private $password = "###";
 	private $charset = "utf8";
 	
 	private $db;

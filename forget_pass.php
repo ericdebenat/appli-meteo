@@ -9,9 +9,9 @@
 
 	function email_send($email) {
 		// Create the Transport
-		$transport = (new Swift_SmtpTransport('smtp.gmail.com', 465, 'ssl'))
-		  ->setUsername('dl.info.angouleme@gmail.com')
-		  ->setPassword('dlinfo2019')
+		$transport = (new Swift_SmtpTransport('smtp.###.com', 465, 'ssl'))
+		  ->setUsername('###')
+		  ->setPassword('###')
 		;
 
 		// Create the Mailer using your created Transport
@@ -19,7 +19,7 @@
 
 		// Create a message
 		$message = (new Swift_Message('Réinitialisation du mot de passe'))
-		  ->setFrom(['dl.info.angouleme@gmail.com' => 'Appli Météo'])
+		  ->setFrom(['###' => 'Appli Météo'])
 		  ->setTo([$email, ''])
 		  ->setBody("<a href='http://deerweb.fr/demo/meteo/init_pass.php?token=".md5($email)."'>Cliquez ici pour réinitialiser le mot de passe</a>")
 		  ;
