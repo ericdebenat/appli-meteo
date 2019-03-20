@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>Météo : Connexion</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Carme" rel="stylesheet">
+	<link rel="stylesheet" href="connect.css">
+</head>
+<body>
+	<div class="container" id="title">
+		<h1>Météo</h1>
+	</div>
+	<div class="container">
+		<div class="row justify-content-around">
+			<div class="col-5 info">
+				<div><h2>Connexion</h2></div>
+			</div>
+			<div class="col-5 info">
+				<div><h2>Inscription</h2></div>
+			</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row justify-content-around">
+			<div class="col-5 connect">
+				<div class="error"><?= $connectError ?></div>
+				<div class="error"><?= $emailChecked ?></div>
+				<form method="post" action="login.php">
+					<div class="form-group">
+						<label for="login">Login</label>
+						<input class="form-control" type="text" name="login" autofocus>
+					</div>
+					<div class="form-group">
+						<label for="password">Mot de passe</label>
+						<input class="form-control" type="password" name="password">
+					</div>
+					<button class="btn btn-primary">Se connecter</button>
+				</form>
+				<div id="forget_pass"><a href="forget_pass.php">Mot de passe oublié ?</a></div>
+			</div>
+			<div class="col-5 connect">
+				<div class="error"><?= $userError ?></div>
+				<div class="error"><?= $emailError ?></div>
+				<div class="error"><?= $passError ?></div>
+				<form method="post" action="user_create.php">
+					<div class="form-group">
+						<label for="user_name">Identifiant</label>
+						<input class="form-control" type="text" name="user_name">
+					</div>
+					<div class="form-group">
+						<label for="email">E-mail</label>
+						<input class="form-control" type="email" name="email">
+					</div>
+					<div class="row">
+						<div class="col-6">
+							<div class="form-group">
+								<label for="pass1">Mot de passe</label>
+								<input class="form-control" type="password" name="pass1">
+							</div>
+						</div>
+						<div class="col-6">
+							<div class="form-group">
+								<label for="pass2">Retapez le mot de passe</label>
+								<input class="form-control" type="password" name="pass2">
+							</div>
+						</div>
+					</div>
+					<button class="btn btn-primary">S'incrire</button>					
+			</div>
+		</div>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

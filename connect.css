@@ -1,0 +1,53 @@
+body {
+	background-color: #D3E0E7;
+}
+
+#title {
+	text-align: center;
+	font-family: Carme;
+	margin-top: 30px;
+}
+
+.info {
+	width: 300px;
+	margin-top: 150px;
+}
+
+h2 {
+	font-size: 1.2em;
+}
+
+.connect {
+	width: 300px;
+	border: 1px solid #AAA;
+	border-radius: 5px;
+	padding: 20px;
+	background-color: white;
+}
+
+.error {
+	font-size: 0.8em;
+	color: red;
+}
+
+#forget_pass {
+	font-size: 0.8em;
+	margin-top: 60px;
+}
+
+#reinit {
+	margin-top: 200px;
+}
+
+#reinit_pass {
+	width: 300px;
+	border: 1px solid #AAA;
+	border-radius: 5px;
+	padding: 20px;
+	background-color: white;
+	margin-top: 30px;
+}
+
+#return {
+	font-size: 0.8em;
+}

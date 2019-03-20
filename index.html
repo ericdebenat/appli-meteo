@@ -1,0 +1,355 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>Météo d'Angoulême</title>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+	
+	<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+	
+	<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.bootstrap4.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+	<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js"></script>
+	
+	
+	<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.bootstrap4.min.css">
+	<link href="https://fonts.googleapis.com/css?family=Carme|Teko" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+
+
+</head>
+<body>
+	<header class='container-fluid'>
+		<h1><span id="title">Météo d'Angoulême</span></h1>
+	<div>
+		<span id="now"></span>
+	</div>
+		<script>
+			$(document).ready(function() {
+				$.getJSON("http://api.openweathermap.org/data/2.5/weather?q=Angouleme&mode=json&appid=4c751f95a60360ae52bee41672463b92&units=metric&lang=fr",
+				function(data) {
+					$("#now").html("<img src=http://openweathermap.org/img/w/" + data.weather[0].icon + ".png> "+data.weather[0].description+" | Température : "+data.main.temp+"°C | Humidité : "+data.main.humidity+"% | Vent : "+(data.wind.speed *3.6).toFixed(1)+" km/h | Nuages : "+data.clouds.all+"%");
+				});
+			});
+		</script>
+	</header>
+	
+	<div class='container'>
+		<h2>Prévisions à 5 jours</h2>
+		<hr>
+	</div>
+	<div class='container'>
+		<div id="day1" class="row date">
+			<script>
+				var d = new Date();
+				var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+				$("#day1").html("<span class='day'>"+d.toLocaleDateString('fr-FR', options)+"</span>");
+			</script>
+		</div>
+		<div>
+			<table id='forecast' class='table table-striped table-bordered'>
+				<thead>
+					<tr>
+						<th>Heure</th>
+						<th class="temps">Temps</th>
+						<th>Température (°C)</th>
+						<th>Taux d'humidité (%)</th>
+						<th>Vitesse du vent (km/h)</th>
+						<th>Densité des nuages (%)</th>
+					</tr>
+				</thead>
+				<tfoot>
+				</tfoot>
+			</table>
+		</div>
+	</div>	
+	<script>
+		$(document).ready(function() {
+			$('#forecast').DataTable( {
+				paging: false,
+				ordering: false,
+				searching: false,
+				info: false,
+				"ajax": {
+					"url": 'http://api.openweathermap.org/data/2.5/forecast?q=Angouleme&mode=json&appid=4c751f95a60360ae52bee41672463b92&units=metric&lang=fr',
+					"dataSrc": function (json) {
+						var forecast = new Array();
+						for (var i=0; i<40; i++) {
+							var d = new Date(json.list[i].dt_txt);
+							var today = new Date();
+							if (d.getDate() == today.getDate()) {
+								forecast[i] = new Array();
+								forecast[i][0] = d.getHours()+"h";
+								forecast[i][1] = "<img src=http://openweathermap.org/img/w/" + json.list[i].weather[0].icon + ".png> "+json.list[i].weather[0].description;
+								forecast[i][2] = json.list[i].main.temp;
+								forecast[i][3] = json.list[i].main.humidity;
+								forecast[i][4] = (json.list[i].wind.speed * 3.6).toFixed(1);
+								forecast[i][5] = json.list[i].clouds.all;
+							}
+						}
+						return forecast;
+					}
+				}
+			});
+		});
+	</script>
+	
+	<div class='container'>
+		<div id="day2" class="row date">
+			<script>
+				var d = new Date();
+				d.setDate(d.getDate() + 1);
+				var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+				$("#day2").html("<span class='day'>"+d.toLocaleDateString('fr-FR', options)+"</span>");
+			</script>
+		</div>
+
+		<div>
+			<table id='forecast2' class='table table-striped table-bordered'>
+				<thead>
+					<tr>
+						<th>Heure</th>
+						<th class="temps">Temps</th>
+						<th>Température (°C)</th>
+						<th>Taux d'humidité (%)</th>
+						<th>Vitesse du vent (km/h)</th>
+						<th>Densité des nuages (%)</th>
+					</tr>
+				</thead>
+				<tfoot>
+				</tfoot>
+			</table>
+		</div>
+	</div>	
+	<script>
+		$(document).ready(function() {
+			$('#forecast2').DataTable( {
+				paging: false,
+				ordering: false,
+				searching: false,
+				info: false,
+				"ajax": {
+					"url": 'http://api.openweathermap.org/data/2.5/forecast?q=Angouleme&mode=json&appid=4c751f95a60360ae52bee41672463b92&units=metric&lang=fr',
+					"dataSrc": function (json) {
+						var forecast = new Array();
+						var j=0;
+						for (var i=0; i<40; i++) {
+							var d = new Date(json.list[i].dt_txt);
+							var date = new Date();
+							date.setDate(date.getDate() + 1);
+							if (d.getDate() == date.getDate()) {
+								forecast[j] = new Array();
+								forecast[j][0] = d.getHours()+"h";
+								forecast[j][1] = "<img src=http://openweathermap.org/img/w/" + json.list[i].weather[0].icon + ".png> "+json.list[i].weather[0].description;
+								forecast[j][2] = json.list[i].main.temp;
+								forecast[j][3] = json.list[i].main.humidity;
+								forecast[j][4] = (json.list[i].wind.speed * 3.6).toFixed(1);
+								forecast[j][5] = json.list[i].clouds.all;
+								j++;
+							}
+						}
+						return forecast;
+					}
+				}
+			});
+		});
+	</script>
+
+	<div class='container'>
+		<div id="day3" class="row date">
+			<script>
+				var d = new Date();
+				d.setDate(d.getDate() + 2);
+				var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+				$("#day3").html("<span class='day'>"+d.toLocaleDateString('fr-FR', options)+"</span>");
+			</script>
+		</div>
+
+		<div>
+			<table id='forecast3' class='table table-striped table-bordered'>
+				<thead>
+					<tr>
+						<th>Heure</th>
+						<th class="temps">Temps</th>
+						<th>Température (°C)</th>
+						<th>Taux d'humidité (%)</th>
+						<th>Vitesse du vent (km/h)</th>
+						<th>Densité des nuages (%)</th>
+					</tr>
+				</thead>
+				<tfoot>
+				</tfoot>
+			</table>
+		</div>
+	</div>	
+	<script>
+		$(document).ready(function() {
+			$('#forecast3').DataTable( {
+				paging: false,
+				ordering: false,
+				searching: false,
+				info: false,
+				"ajax": {
+					"url": 'http://api.openweathermap.org/data/2.5/forecast?q=Angouleme&mode=json&appid=4c751f95a60360ae52bee41672463b92&units=metric&lang=fr',
+					"dataSrc": function (json) {
+						var forecast = new Array();
+						var j=0;
+						for (var i=0; i<40; i++) {
+							var d = new Date(json.list[i].dt_txt);
+							var date = new Date();
+							date.setDate(date.getDate() + 2);
+							if (d.getDate() == date.getDate()) {
+								forecast[j] = new Array();
+								forecast[j][0] = d.getHours()+"h";
+								forecast[j][1] = "<img src=http://openweathermap.org/img/w/" + json.list[i].weather[0].icon + ".png> "+json.list[i].weather[0].description;
+								forecast[j][2] = json.list[i].main.temp;
+								forecast[j][3] = json.list[i].main.humidity;
+								forecast[j][4] = (json.list[i].wind.speed * 3.6).toFixed(1);
+								forecast[j][5] = json.list[i].clouds.all;
+								j++;
+							}
+						}
+						return forecast;
+					}
+				}
+			});
+		});
+	</script>
+
+	<div class='container'>
+		<div id="day4" class="row date">
+			<script>
+				var d = new Date();
+				d.setDate(d.getDate() + 3);
+				var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+				$("#day4").html("<span class='day'>"+d.toLocaleDateString('fr-FR', options)+"</span>");
+			</script>
+		</div>
+
+		<div>
+			<table id='forecast4' class='table table-striped table-bordered'>
+				<thead>
+					<tr>
+						<th>Heure</th>
+						<th class="temps">Temps</th>
+						<th>Température (°C)</th>
+						<th>Taux d'humidité (%)</th>
+						<th>Vitesse du vent (km/h)</th>
+						<th>Densité des nuages (%)</th>
+					</tr>
+				</thead>
+				<tfoot>
+				</tfoot>
+			</table>
+		</div>
+	</div>	
+	<script>
+		$(document).ready(function() {
+			$('#forecast4').DataTable( {
+				paging: false,
+				ordering: false,
+				searching: false,
+				info: false,
+				"ajax": {
+					"url": 'http://api.openweathermap.org/data/2.5/forecast?q=Angouleme&mode=json&appid=4c751f95a60360ae52bee41672463b92&units=metric&lang=fr',
+					"dataSrc": function (json) {
+						var forecast = new Array();
+						var j=0;
+						for (var i=0; i<40; i++) {
+							var d = new Date(json.list[i].dt_txt);
+							var date = new Date();
+							date.setDate(date.getDate() + 3);
+							if (d.getDate() == date.getDate()) {
+								forecast[j] = new Array();
+								forecast[j][0] = d.getHours()+"h";
+								forecast[j][1] = "<img src=http://openweathermap.org/img/w/" + json.list[i].weather[0].icon + ".png> "+json.list[i].weather[0].description;
+								forecast[j][2] = json.list[i].main.temp;
+								forecast[j][3] = json.list[i].main.humidity;
+								forecast[j][4] = (json.list[i].wind.speed * 3.6).toFixed(1);
+								forecast[j][5] = json.list[i].clouds.all;
+								j++;
+							}
+						}
+						return forecast;
+					}
+				}
+			});
+		});
+	</script>
+
+	<div class='container'>
+		<div id="day5" class="row date">
+			<script>
+				var d = new Date();
+				d.setDate(d.getDate() + 4);
+				var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+				$("#day5").html("<span class='day'>"+d.toLocaleDateString('fr-FR', options)+"</span>");
+			</script>
+		</div>
+		
+		<div>
+			<table id='forecast5' class='table table-striped table-bordered'>
+				<thead>
+					<tr>
+						<th>Heure</th>
+						<th class="temps">Temps</th>
+						<th>Température (°C)</th>
+						<th>Taux d'humidité (%)</th>
+						<th>Vitesse du vent (km/h)</th>
+						<th>Densité des nuages (%)</th>
+					</tr>
+				</thead>
+				<tfoot>
+				</tfoot>
+			</table>
+		</div>
+	</div>	
+	<script>
+		$(document).ready(function() {
+			$('#forecast5').DataTable( {
+				paging: false,
+				ordering: false,
+				searching: false,
+				info: false,
+				"ajax": {
+					"url": 'http://api.openweathermap.org/data/2.5/forecast?q=Angouleme&mode=json&appid=4c751f95a60360ae52bee41672463b92&units=metric&lang=fr',
+					"dataSrc": function (json) {
+						var forecast = new Array();
+						var j=0;
+						for (var i=0; i<40; i++) {
+							var d = new Date(json.list[i].dt_txt);
+							var date = new Date();
+							date.setDate(date.getDate() + 4);
+							if (d.getDate() == date.getDate()) {
+								forecast[j] = new Array();
+								forecast[j][0] = d.getHours()+"h";
+								forecast[j][1] = "<img src=http://openweathermap.org/img/w/" + json.list[i].weather[0].icon + ".png> "+json.list[i].weather[0].description;
+								forecast[j][2] = json.list[i].main.temp;
+								forecast[j][3] = json.list[i].main.humidity;
+								forecast[j][4] = (json.list[i].wind.speed * 3.6).toFixed(1);
+								forecast[j][5] = json.list[i].clouds.all;
+								j++;
+							}
+						}
+						return forecast;
+					}
+				}
+			});
+		});
+	</script>
+<footer>
+	<hr>
+	<div class="container">
+		Origine des données météo : <a href="https://openweathermap.org">OpenWeatherMap</a>
+	</div>
+</footer>
+</body>
+</html>
